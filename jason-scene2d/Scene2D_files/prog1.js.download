@@ -1,0 +1,61 @@
+class Person {
+    constructor(name, age, sex) {
+        this.name = name
+        this.age = age
+        this.sex = sex
+        }
+}
+
+class Student extends Person {
+    constructor (name, age, sex, id) {
+        super(name, age, sex)
+        this.id = id
+        this.classes = []
+        this.friends = []
+        }
+    register (x) {
+        this.classes.push(x)
+        x.student.push(this)    
+    }
+    befriend (x) {
+        this.friends.push (x)
+        x.friends.push (this)
+    }
+}
+
+class Teacher extends Person {
+    constructor (name, age, sex, id) {
+        super (name, age, sex)
+        this.id = id
+        this.classes = []
+        }
+    teach(x) {
+        this.classes.push(x)
+        x.teacher.push(this)
+    }
+}
+
+class Class {
+    constructor (id, name, description, student, teacher) {
+        this.id = id
+        this.name = name
+        this.description = description
+        this.student = []
+        this.teacher = []
+    }
+    addstudent(x){
+        this.student.push(x)
+    }
+    addteacher(x) {
+        this.teacher.push(x)
+    }
+}
+
+let Jason = new Student ("Jason", 17, "male", 89)
+let Shrek = new Student ("Shrek", 56, "male", 420)
+let Sploogeman = new Student ("Sploogeman", 784, "male", 42069420)
+let AlgebraIII = new Class (584, "AlgebraIII", "Super Advanced Algebra")
+let AlgebraIV = new Class (875, "AlgebraIV", "95% fail rate")
+let Chungoner = new Teacher ("Chungoner", 2, "munion", 904)
+let Elmo = new Teacher ("Elmo", 4832974934162536712537838240832, 9, 9004)
+

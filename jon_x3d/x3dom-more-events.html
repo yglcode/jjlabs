@@ -1,0 +1,43 @@
+<html>
+    <head>
+        <title>My first X3DOM page</title>
+        <script type='text/javascript' src='scripts/x3dom.js'></script>
+        <link rel='stylesheet' type='text/css' href='styles/x3dom.css'></link>
+        <link rel='stylesheet' type='text/css' href='styles/app-style.css'></link>
+    </head>
+    <body>
+        <h1>Jonathan's X3DOM World</h1>
+        <x3d width='500px' height='400px'>
+            <scene>
+                <transform id="cubeRotate" rotation='1 0 0 0'>
+                    <shape onclick="rotateCube()">
+                        <appearance>
+                            <material diffuseColor='1 0 0'></material>
+                            <ImageTexture id="pics1" url='res/jon_jason.png'></ImageTexture>
+                        </appearance>
+                        <box></box>
+                    </shape>
+                </transform>
+                <transform id="coneMove" translation='-3 0 0' rotation='1 0 0 0'>
+                    <shape onclick="moveCone()">
+                        <appearance>
+                            <ImageTexture id="pics3" url='res/jon_jason.png'></ImageTexture>
+                            <material diffuseColor='0 1 0'></material>
+                        </appearance>
+                        <cone></cone>
+                    </shape>
+                </transform>
+                <transform id="sphereScale" translation='3 0 0' scale='1 1 1' rotation='0 1 0 0'>
+                    <shape onclick="scaleSphere()">
+                        <appearance>
+                            <material id="sphereColor" diffuseColor='0 0 1'></material>
+                            <ImageTexture id="pics2" url='res/jon_jason.png'></ImageTexture>
+                        </appearance>
+                        <sphere></sphere>
+                    </shape>
+                </transform>
+            </scene>
+        </x3d>
+        <script type='text/javascript' src='scripts/event_handlers.js'></script>
+    </body>
+</html>

@@ -1,0 +1,530 @@
+class Scene2D extends Two {
+    constructor(canvasId='canvas', w=585, h=500) {
+        super({
+            width: w,
+            height: h
+        })
+        this.elem = document.getElementById(canvasId)
+        this.appendTo(this.elem)
+        this.elem.style.backgroundColor='rgb(10,50,50)'
+        this.children=this.scene.children.ids
+        this.on("dblclick", function (e) {
+            let center = this.position (e)
+            new Ball (this, center.x, center.y, 10)
+            }
+        )
+        /*this.on ("click", function (e) {
+            new Line (this, new Point (e.x - 10, e.y - 125), new Point (e.x + 10, e.y - 125), 10)
+            this.update()
+        }
+        )*/
+ /*       this.on("mousedown", (e)=>{
+            this.on("mousemove", (e)=> {
+            console.log(e.x, e.y)
+                }
+            )
+            }
+        )
+
+        this.on("mouseup", (e)=> {
+            this.off("mousemove")
+            }
+        ) */
+        this.balls=[]
+        this.lines=[]
+        let l1 = new Line (this, new Point (0,0), new Point (this.width,0))
+        //let l2 = new Line (this, new Point (0,this.height), new Point (this.width,this.height))
+        let l3 = new Line (this, new Point (0,0), new Point (0,this.height))
+        let l4 = new Line (this, new Point (this.width,0), new Point (this.width,this.height))
+        //this.enableRubberband()
+        this.enablePingPong()
+        //
+        //this.BB = new Ball(this,100,100,50)
+        //this.BB.stop()
+        //this.BB.off("click")
+        //this.enableDragBB()
+    }
+    //events: click,mousedown,mousemove,mouseup
+    
+    on(event, callback) {
+        this.elem["on" + event] = callback.bind(this)
+    }
+    off(event) {
+        this.elem["on" + event] = null
+    }
+    position(e) {
+        let bbox = this.elem.getBoundingClientRect()
+        return {
+            x: e.x - bbox.x * this.width / bbox.width,
+            y: e.y - bbox.y * this.height / bbox.height
+        }
+    }
+    clear() {
+        for(let c in this.children) {
+            this.children[c].stop()
+            this.remove(this.children[c])
+            this.update()
+        }
+    }
+    SaveLines() {
+        let ls="["
+        for (let i=0; i<this.lines.length; i++) {
+            let l=this.lines[i]
+            ls+="["+l.p1.x+","+l.p1.y+","+l.p2.x+","+l.p2.y+"]"
+            if (i!== this.lines.length-1) {
+                ls+="," 
+            }
+        }
+        ls+="]"
+        return ls
+    }
+    SaveBalls() {
+        let bs="["
+        for (let i=0; i<this.balls.length; i++) {
+            let b=this.balls[i]
+            bs+="["+b.position.x+","+b.position.y+","+b.radius+"]"
+            if (i!== this.balls.length-1) {
+                bs+="," 
+            }
+        }
+        bs+="]"
+        return bs
+    }
+    enablePingPong() {
+        let PingPongPad = new Line (this, new Point (250,300), new Point (400,300), 10)
+        this.on("mousedown",e=>{
+            let pos = this.position(e)
+            if (pos.x >= PingPongPad.pmin.x &&
+                pos.x <= PingPongPad.pmax.x &&
+                pos.y >= (PingPongPad.pmin.y - PingPongPad.width) &&
+                pos.y <= (PingPongPad.pmin.y + PingPongPad.width)) { //hit ball
+                this.posPad = pos
+                this.on("mousemove",e=>{
+                    let pos = this.position(e)
+                    let diff = {
+                        x: pos.x-this.posPad.x,
+                        y: pos.y-this.posPad.y
+                    }
+                    this.posPad = pos 
+                    PingPongPad.moveEnd(1,diff)
+                    PingPongPad.moveEnd(0,diff)
+                    this.update()
+                })
+            }
+        })
+        this.on("mouseup",e=>{
+            if(this.posPad!==undefined) {
+                    let pos = this.position(e)
+                    let diff = {
+                        x: pos.x-this.posPad.x,
+                        y: pos.y-this.posPad.y
+                    }
+                    this.posPad = pos 
+                    PingPongPad.moveEnd(1,diff)
+                    PingPongPad.moveEnd(0,diff)
+                    this.update()                
+            }
+            this.off("mousemove")
+            delete this.posPad
+        })
+    }
+    enableDragBB() {
+        this.on("mousedown",e=>{
+            let pos = this.position(e)
+            let dx = pos.x-this.BB.position.x
+            let dy = pos.y-this.BB.position.y
+            let dist = Math.sqrt(dx*dx+dy*dy)
+            if (dist<=this.BB.radius) { //hit ball
+                this.posBB = pos
+                this.on("mousemove",e=>{
+                    let pos = this.position(e)
+                    let diff = {
+                        x: pos.x-this.posBB.x,
+                        y: pos.y-this.posBB.y
+                    }
+                    this.posBB = pos 
+                    this.BB.position.x += diff.x
+                    this.BB.position.y += diff.y
+                    this.update()
+                })
+            }
+        })
+        this.on("mouseup",e=>{
+            if(this.posBB!==undefined) {
+                    let pos = this.position(e)
+                    let diff = {
+                        x: pos.x-this.posBB.x,
+                        y: pos.y-this.posBB.y
+                    }
+                    this.posBB = pos 
+                    this.BB.position.x += diff.x
+                    this.BB.position.y += diff.y
+                    this.update()                
+            }
+            this.off("mousemove")
+            delete this.posBB
+        })
+    }
+    /*enableRubberband() {
+        this.on("mousedown", e=>{
+            this.rb_p1 = this.position(e)
+            this.on("mousemove", e=>{
+                if (this.rubberband === undefined) {
+                    this.rb_p2 = this.position(e)
+                    this.rubberband = new Line(this,this.rb_p1,this.rb_p2)
+                } else {
+                    //just move 2nd endpoint
+                    let p2 = this.position(e)
+                    let diff = {
+                        x: p2.x - this.rb_p2.x,
+                        y: p2.y - this.rb_p2.y
+                    }
+                    this.rb_p2 = p2
+                    this.rubberband.moveEnd(1, diff)
+                }
+                this.update()
+            }
+            )
+        }
+        )
+        this.on("mouseup", (e)=>{
+            if (this.rb_p2 !== undefined) {
+                let p2 = this.position(e)
+                let diff = {
+                    x: p2.x - this.rb_p2.x,
+                    y: p2.y - this.rb_p2.y
+                }
+                this.rb_p2 = p2
+                let dx = this.rb_p2.x - this.rb_p1.x
+                let dy = this.rb_p2.y - this.rb_p1.y
+                if (dx<0) {
+                    dx = -dx
+                }
+                if (dy<0) {
+                    dy = -dy
+                }
+                if (dx>dy) {
+                    diff.y -= this.rb_p2.y - this.rb_p1.y
+                } else {
+                    diff.x -= this.rb_p2.x - this.rb_p1.x
+                }
+                this.rubberband.moveEnd(1, diff)
+                //this.lines.push(this.rubberband)
+                this.update()
+            }
+            //add new line to this.lines & reset
+            this.off("mousemove")
+            this.rubberband = undefined
+            delete this.rb_p1
+            delete this.rb_p2
+        }
+        )
+    }*/
+}
+
+class Circle extends Two.Circle {
+    constructor(scene2d, cx=72, cy=100, r=50, color) {
+        super(cx, cy, r)
+
+        if (color===undefined) {
+            let rc=Math.random()*255
+            let gc=Math.random()*255
+            let bc=Math.random()*255
+            color=`rgb(${rc},${gc},${bc})`
+        }
+        this.fill = color
+        //this.stroke = 'orangered'
+        //this.linewidth = 5
+        this.scene2d = scene2d
+
+        scene2d.add(this)
+        scene2d.update()
+
+        this.elem = this._renderer.elem
+        this.position = this.translation
+    }
+    move(dx, dy) {
+        this.translation.x += dx
+        this.translation.y += dy
+        this.scene2d.update()
+    }
+    //events: click,mousedown,mousemove,mouseup
+    on(event, callback) {
+        this.elem["on" + event] = callback.bind(this)
+    }
+    off(event) {
+        this.elem["on" + event] = null
+    }
+
+    stop() {
+        if(this.time!==undefined) {
+            console.log("stop!")
+            clearInterval(this.time)
+            delete this.time
+        }
+    }
+}
+
+class Ball extends Circle {
+    constructor(scene2d, cx=72, cy=100, r=10, color) {
+        super(scene2d, cx, cy, r, color)
+        console.log(`ball: ${cx},${cy}`)
+        this.start()
+        this.on("click", e=>this.explode()
+        )
+        this.scene2d.balls.push(this)
+    }
+      start () {
+            if (this.time === undefined) {
+                this.dx=(Math.random()*3)+(Math.random()*-3)
+                this.dy=-3
+                this.rx = 0
+                this.time = setInterval(()=>this.run(), 20)
+            } else {
+                this.stop()
+            }
+      }
+      stop() {
+                clearInterval(this.time)
+                delete this.time
+                delete this.dx
+                delete this.dy
+                delete this.rx
+      
+      }
+      explode () {
+          let b1 = new Ball (s, this.position.x, this.position.y, this.radius/4)
+          b1.dx = -this.dx
+          b1.dy = this.dy
+          b1.rx = this.rx
+          let b2 = new Ball (s, this.position.x, this.position.y, this.radius/4)
+          b2.dx = this.dx
+          b2.dy = -this.dy
+          b2.rx = this.rx
+          let b3 = new Ball (s, this.position.x, this.position.y, this.radius/4)
+          b3.dx = -this.dx
+          b3.dy = -this.dy
+          b3.rx = this.rx
+          this.radius = this.radius/4
+          this.scene2d.update()
+      }
+      dilate () {
+            if (this.radius < 10) {
+                this.rx = 0
+            } else if (this.radius >= 50) {
+                this.rx = 0}
+            this.radius=this.radius+this.rx
+            this.scene2d.update()
+            }
+      run () {
+            if (this.radius <= 55) {
+                //this.dilate() 
+            }
+            for (let i=0; i<s.lines.length; i++) {
+                if (s.lines[i].hit(this)===true) { 
+                    if (s.lines[i].horizontal !== true) {
+                        if (this.position.x>=s.lines[i].p1.x && this.dx<0) {
+                            this.dx = -this.dx
+                        } else if(this.position.x<=s.lines[i].p1.x && this.dx>0) {
+                            this.dx = -this.dx
+                        }
+                    } else if (s.lines[i].horizontal === true) {
+                        if (this.position.y>=s.lines[i].p1.y && this.dy<0) {
+                            this.dy = -this.dy
+                        } else if(this.position.y<=s.lines[i].p1.y && this.dy>0) {
+                            this.dy = -this.dy
+                        }
+                    }
+                }
+            }
+            this.move(this.dx, this.dy)
+    }
+}
+
+
+            /*if (this.position.x<this.radius) {
+                this.dx=3
+            } else if (this.position.x>this.scene2d.width-this.radius) {
+                this.dx=-3
+            } 
+            if (this.position.y<this.radius) {
+                this.dy=3
+            } else if (this.position.y>this.scene2d.height-this.radius) {
+                this.dy=-3
+            } 
+            this.move(this.dx, this.dy)
+     } 
+}
+
+/*
+
+function drawRect(scene2d,x=213,y=100,w=100,h=100,color='rgb(0,200,255)') {
+    let rect = scene2d.makeRectangle(x,y,w,h)
+
+    rect.fill=color
+    rect.opacity=0.75
+    rect.noStroke()
+
+    scene2d.update()
+
+    return rect
+}
+
+*/
+
+class Point {
+    constructor (x,y) {
+    this.x = x
+    this.y = y
+    }
+}
+
+
+class Line extends Two.Line {
+   constructor(scene2d, p1, p2, width, color) {
+        super(p1.x, p1.y, p2.x, p2.y)
+        this.p1=p1
+        this.p2=p2
+        this.pmin = p1
+        this.pmax = p2
+        this.points = [p1, p2]
+        this.scene2d = scene2d
+        this.cap = 'round'
+        this.width = width
+        this.linewidth = 10
+        this.scene2d.lines.push(this)
+        if (width !== undefined) {
+            this.linewidth = width
+        }
+        if (color !== undefined) {
+            this.stroke = color
+        } else {
+            let rc = Math.random() * 10
+            let gc = 50 + Math.random() * 200
+            let bc = 50 + Math.random() * 200
+            this.stroke = `rgb(${rc},${gc},${bc})`
+        }
+        this.bbox()
+        this.scene2d.add(this)
+        this.scene2d.update()
+    }
+    hit (circle) {
+        if (circle.position.x <= this.pmin.x + circle.radius && 
+        circle.position.x >= this.pmin.x - circle.radius && 
+        this.horizontal===false &&
+        circle.position.y >= this.pmin.y && 
+        circle.position.y <= this.pmax.y) {
+            return true
+        }
+        if (circle.position.y <= this.pmin.y + circle.radius && 
+        circle.position.y >= this.pmin.y - circle.radius && 
+        this.horizontal===true &&
+        circle.position.x >= this.pmin.x && 
+        circle.position.x <= this.pmax.x) {
+            return true
+        }
+        return false
+    }
+    bbox () {
+/*
+        this.horizontal = Math.abs(this.p1.y-this.p2.y) < 0.01
+        if (this.horizontal === true && this.pmin.x > this.pmax.x) {
+            let c = this.pmin.x
+            this.pmin.x = this.pmax.x
+            this.pmax.x = c
+        }
+        if (this.horizontal !== true && this.pmin.y > this.pmax.y) {
+            let d = this.pmin.y
+            this.pmin.y = this.pmax.y
+            this.pmax.y = d
+        }
+        */
+        this.horizontal = Math.abs(this.p1.y-this.p2.y) < 0.01
+        this.pmin=this.p1
+        this.pmax=this.p2
+        if (this.horizontal === true && this.pmin.x > this.pmax.x) {
+            this.pmin=this.p2
+            this.pmax=this.p1
+        }
+        if (this.horizontal !== true && this.pmin.y > this.pmax.y) {
+            this.pmin=this.p2
+            this.pmax=this.p1
+        }
+    }
+    //move 1st or 2nd endpoint(0,1) at a dist {x,y}
+    moveEnd(index, dist) {
+        this.points[index].x += dist.x
+        this.points[index].y += dist.y
+        this.vertices[index].addSelf(dist)
+        this.bbox()
+    }
+}
+
+function setup() {
+    s = new Scene2D()
+setInterval (function () {new Ball (s, Math.random()*s.width, Math.random()*s.height)},1000)
+    //let maze=[[0,0,585,0],[0,500,585,500],[0,0,0,500],[585,0,585,500],[29.54201680672269,497.2249503968254,29.54201680672269,38.22495039682539],[34.542016806722685,41.22495039682539,403.5420168067227,41.22495039682539],[506.5420168067227,68.22495039682539,543.5420168067227,68.22495039682539],[436.5420168067227,69.22495039682539,465.5420168067227,69.22495039682539],[370.5420168067227,70.22495039682539,395.5420168067227,70.22495039682539],[307.5420168067227,74.22495039682539,340.5420168067227,74.22495039682539],[241.5420168067227,73.22495039682539,278.5420168067227,73.22495039682539],[189.5420168067227,77.22495039682539,220.5420168067227,77.22495039682539],[123.54201680672269,73.22495039682539,157.5420168067227,73.22495039682539],[64.54201680672269,71.22495039682539,98.54201680672269,71.22495039682539],[102.54201680672269,98.22495039682539,141.5420168067227,98.22495039682539],[163.5420168067227,98.22495039682539,194.5420168067227,98.22495039682539],[228.5420168067227,97.22495039682539,246.5420168067227,97.22495039682539],[292.5420168067227,94.22495039682539,310.5420168067227,94.22495039682539],[357.5420168067227,95.22495039682539,380.5420168067227,95.22495039682539],[399.5420168067227,98.22495039682539,422.5420168067227,98.22495039682539],[472.5420168067227,97.22495039682539,513.5420168067227,97.22495039682539],[65.54201680672269,126.22495039682539,108.54201680672269,126.22495039682539],[141.5420168067227,125.22495039682539,171.5420168067227,125.22495039682539],[197.5420168067227,124.22495039682539,231.5420168067227,124.22495039682539],[261.5420168067227,124.22495039682539,301.5420168067227,124.22495039682539],[360.5420168067227,125.22495039682539,387.5420168067227,125.22495039682539],[440.5420168067227,125.22495039682539,477.5420168067227,125.22495039682539],[508.5420168067227,125.22495039682539,552.5420168067227,125.22495039682539],[61.542016806722685,155.2249503968254,98.54201680672269,155.2249503968254],[126.54201680672269,151.2249503968254,160.5420168067227,151.2249503968254],[189.5420168067227,149.2249503968254,225.5420168067227,149.2249503968254],[249.5420168067227,149.2249503968254,277.5420168067227,149.2249503968254],[320.5420168067227,149.2249503968254,356.5420168067227,149.2249503968254],[403.5420168067227,147.2249503968254,435.5420168067227,147.2249503968254],[471.5420168067227,148.2249503968254,499.5420168067227,148.2249503968254],[539.5420168067227,150.2249503968254,567.5420168067227,150.2249503968254],[536.5420168067227,97.22495039682539,475.5420168067227,97.22495039682539],[582.5420168067227,178.2249503968254,81.54201680672269,178.2249503968254],[80.54201680672269,177.2249503968254,80.54201680672269,452.2249503968254],[79.54201680672269,450.2249503968254,525.5420168067227,450.2249503968254],[525.5420168067227,446.2249503968254,525.5420168067227,420.2249503968254],[586.5420168067227,374.2249503968254,136.5420168067227,374.2249503968254],[207.5420168067227,377.2249503968254,207.5420168067227,412.2249503968254],[389.5420168067227,447.2249503968254,389.5420168067227,419.2249503968254],[140.5420168067227,376.2249503968254,140.5420168067227,315.2249503968254],[136.5420168067227,315.2249503968254,535.5420168067227,315.2249503968254],[535.5420168067227,314.2249503968254,535.5420168067227,268.2249503968254],[535.5420168067227,268.2249503968254,379.5420168067227,268.2249503968254],[324.5420168067227,271.2249503968254,149.5420168067227,271.2249503968254],[149.5420168067227,271.2249503968254,149.5420168067227,231.2249503968254],[152.5420168067227,242.2249503968254,152.5420168067227,184.2249503968254],[330.5420168067227,267.2249503968254,330.5420168067227,250.2249503968254],[386.5420168067227,267.2249503968254,386.5420168067227,211.2249503968254],[339.5420168067227,247.2249503968254,192.5420168067227,247.2249503968254],[194.5420168067227,210.2249503968254,338.5420168067227,210.2249503968254],[394.5420168067227,212.2249503968254,535.5420168067227,212.2249503968254],[535.5420168067227,213.2249503968254,535.5420168067227,269.2249503968254],[243.5420168067227,320.2249503968254,243.5420168067227,334.2249503968254],[249.5420168067227,374.2249503968254,249.5420168067227,364.2249503968254]]
+    //let balls=[[10.5420168067227,126.22495039682542,2.5],[149.5420168067227,162.22495039682542,10],[500.5420168067227,21.22495039682542,10],[338.5420168067227,273.2249503968254,10],[196.5420168067227,191.22495039682542,10],[20.5420168067227,224.22495039682542,10],[17.5420168067227,413.2249503968254,10],[11.5420168067227,351.2249503968254,10],[260.5420168067227,194.22495039682542,10],[239.5420168067227,196.22495039682542,10],[296.5420168067227,153.22495039682542,10],[185.5420168067227,138.22495039682542,10],[193.5420168067227,139.22495039682542,10],[218.5420168067227,14.22495039682542,10],[372.5420168067227,88.22495039682542,10],[459.5420168067227,7.22495039682542,10],[557.5420168067227,27.22495039682542,10],[464.5420168067227,152.22495039682542,10],[53.5420168067227,146.22495039682542,10],[135.5420168067227,418.2249503968254,10],[72.5420168067227,106.22495039682542,10],[22.5420168067227,156.22495039682542,2.5],[274.5420168067227,234.22495039682542,2.5],[208.5420168067227,228.22495039682542,2.5],[204.5420168067227,136.22495039682542,10],[493.5420168067227,54.22495039682542,10],[104.5420168067227,316.2249503968254,10],[128.5420168067227,412.2249503968254,10],[116.5420168067227,262.2249503968254,10],[113.5420168067227,313.2249503968254,10],[113.5420168067227,313.2249503968254,10],[188.5420168067227,394.2249503968254,10],[191.5420168067227,409.2249503968254,10],[107.5420168067227,349.2249503968254,10],[131.5420168067227,247.22495039682542,10],[164.5420168067227,394.2249503968254,10],[259.5420168067227,96.22495039682542,10],[566.5420168067227,225.22495039682542,10],[341.5420168067227,417.2249503968254,10],[158.5420168067227,429.2249503968254,10]]
+    //maze.forEach(l=>new Line(s,new Point(l[0],l[1]),new Point(l[2],l[3])))
+    //balls.forEach(b=>new Ball(s,b[0],b[1],b[2]))
+}
+
+
+
+
+    /*c1 = new Circle(s)
+
+    c1.on("mousedown", function(e) {
+        c1.x = e.x;
+        c1.y = e.y;
+        c1.on("mousemove", (e)=>{
+            c1.move(e.x - c1.x, e.y - c1.y)
+            c1.x = e.x;
+            c1.y = e.y
+        }
+        )
+    })
+
+    c1.on("mouseup", function() {
+        c1.off("mousemove")
+        delete c1.x
+        delete c1.y
+    })
+
+    c1.on("click", function(e) {
+        console.log(`click: ${e.x}:${e.y}`)
+        if (c1.interval !== undefined) {
+            clearInterval(c1.interval);
+            delete c1.interval
+            delete c1.dx
+            delete c1.dy
+            return
+        }
+        c1.dx = 10;
+        c1.dy = 10
+        c1.interval = setInterval(function() {
+            c1.move(c1.dx, c1.dy)
+            if (c1.translation.x < 0 && c1.dx < 0) {
+                c1.dx = -c1.dx
+            }
+            if (c1.translation.x > c1.scene2d.width && c1.dx > 0) {
+                c1.dx = -c1.dx
+            }
+            if (c1.translation.y < 0 && c1.dy < 0) {
+                c1.dy = -c1.dy
+            }
+            if (c1.translation.y > c1.scene2d.height && c1.dy > 0) {
+                c1.dy = -c1.dy
+            }
+        }, 50)
+    }) */
+/*
+    s.on("dblclick", function(e) {
+        console.log(`center: ${e.x}:${e.y}`)
+        let center = s.position(e)
+        new Ball(this,center.x,center.y)
+    })
+    */
+
+window.onload = setup
+
