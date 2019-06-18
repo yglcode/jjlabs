@@ -1,1 +1,1 @@
-# Javascript Labs for Jason & Jon
+### https://yglcode.github.io/jjlabs/
