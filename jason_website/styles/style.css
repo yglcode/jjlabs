@@ -1,0 +1,133 @@
+h1 {
+    color: red;
+
+}
+
+p {
+    color: rgb(66, 162, 63);
+    font-size: 25px;
+    border: 2px solid red;
+    margin: 3px;
+    padding: 3px;
+    background-color: pink;
+}
+
+ol li {
+    color: #cc6933;
+}
+
+ul li {
+    color: saddlebrown;
+}
+
+table {
+    color:black;
+    border:1px solid;
+    padding:7px;
+}
+
+html {
+    color:red;
+}
+
+#yolo {
+    color:green
+}
+
+.yoolo{
+    color:#e400e8
+}
+
+th {
+    border: 2px solid;
+}
+
+td {
+    border: 1px solid;
+    text-align: center;
+}
+.classes {
+    margin: 7px;
+    border: 3px dashed #86f386;
+    display: flex;
+    flex-direction:column;
+}
+
+.imagecollection {
+    width:200px;
+    height:200px;
+    border:4px solid blue;
+}
+
+.picturelist {
+    display: flex;
+    flex-direction:row;
+}
+
+.imagecollection:hover {
+    width:250px;
+    height:250px;
+    border:4px solid blue;
+}
+
+
+#titlebar {
+    padding:5px 5px 5px 5px;
+    margin:20px;
+    justify-content:space-evenly;
+}
+
+.header {
+    border:3px solid orange;
+    padding:2px 2px 2px 2px;
+    margin:20px;
+    background-color:burlywood;
+}
+
+#multbox {
+    margin: 7px;
+    border: 2px solid black;
+    display: flex;
+    flex-direction:row;
+}
+
+#button {
+    background-color: green;
+}
+
+#clear {
+    background-color:red;
+}
+
+#calculator {
+    padding: 10px;
+}
+
+#forms {
+    border: 7px solid green;
+    background-color: lightcyan;
+}
+
+.harryimage {
+    width: 100px;
+}
+
+.tikey {
+    padding: 8px;
+}
+
+#screen {
+    height: 50px;
+    width: 171px;
+    border: 2px solid black;
+    background-color: whitesmoke;
+}
+
+#calcbody {
+    border: 2px solid grey;
+    background-color: tan;
+}
+
+.keys {
+    background-color: blanchedalmond;
+}

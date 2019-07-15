@@ -1,0 +1,127 @@
+/*body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}*/
+h1 {
+    color : red;
+    text-align : center;
+}
+
+p {
+    color : #00ffff;
+    background-color: rgb(218, 152, 212);
+    font-size : 20px;
+    /*    text-align : center;*/
+}
+
+ol li {
+    color : blue;
+}
+
+ul li {
+    color : #ff00f2;
+}
+
+table tr {
+    color : orange;
+}
+
+table {
+    border : dashed;
+    /*width: 300px;*/
+}
+
+html {
+    color : red;
+}
+
+#header {
+    color : red;
+    font-size : 20px;
+}
+
+.class {
+    color : blue;
+}
+
+th {
+    border : solid 0.5px;
+    background-color: rgba(40,200,200,0.5)
+}
+
+.race {
+    border : solid 0.5px;
+    background-color: rgb(40,50,50);
+    padding : 10px 10px 10px 10px;
+}
+
+.list {
+    padding : 0px 0px 0px 0px;
+    margin : 0px 0px 0px 0px;
+    display : flex;
+    flex-direction : column
+}
+
+.pic {
+    height : 100px;
+    width : 100px;
+}
+
+.piclist {
+    display : flex;
+    flex-direction : row;
+    justify-content : space-evenly;
+}
+
+.pic:hover {
+    width : 300;
+    height : 100;
+}
+
+.time {
+    border : solid 0.5px;
+    background-color: #E91E63;
+    padding : 5px 5px 5px 5px;
+}
+
+#hotbar {
+    color : #e39531;
+    background-color : aquamarine;
+    border : solid 2px;
+    padding : 5px 5px 5px 5px;
+    justify-content : space-evenly;
+    text-align : center;
+}
+
+#mathstuff {
+    display : flex;
+    flex-direction : row;
+    justify-content : space-evenly;
+}
+
+#results {
+    border: 1px solid red;
+}
+
+#calc {
+    display : flex;
+    flex-direction : column;
+    justify-content : space-evenly;
+    width : 150;
+    height : 300;
+}
+
+#calcpad {
+    border : solid 0.5px;
+    background-color: #401ee9;
+    padding : 5px 5px 5px 5px;
+}
+
+.key{
+   border : solid 0.5px;
+   background-color: #673AB7;
+   width : 90;
+   height : 40;
+}

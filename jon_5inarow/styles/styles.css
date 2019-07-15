@@ -1,0 +1,125 @@
+#title {
+    border : solid 5px;
+    text-align : center;
+    background-color : burlywood;
+}
+
+#interface {
+    display: flex;
+    justify-content : space-evenly;
+    align-items: center;
+    border : solid 5px;
+    background-color : burlywood;
+    padding : 5px;
+}
+
+#board {
+    border : solid 5px;
+    background-color : burlywood;
+    display: flex;
+    justify-content : space-evenly;
+    /*background-image: url("../res/board-back2.jpg")*/
+    background-image: url("../res/board-back1.png")
+}
+
+#turnpic {
+    border : solid .1px;
+    padding : 3px;
+    width : 20px;
+    /*height : 20px*/
+}
+
+.tile {
+    border : solid .1px;
+    width : 21px;
+    height : 23px;
+    padding : 2px 2px 0px 2px;
+}
+
+#turns {
+    display: flex;
+    justify-content : space-evenly;
+    align-items: center;
+    background-color : burlywood;
+    padding : 5px;
+}
+
+
+/*
+#wpiece {
+    src: "../res/white.jpeg";
+    width: 20px;
+    height: 20px;
+    align: center;
+}
+
+#bpiece {
+    src: "../res/black.png";
+    width: 20px;
+    height: 20px;
+    align: center;
+}*/
+
+#winlog {
+    display: flex;
+    flex-direction : column;
+    border : solid 1px;
+    text-align : center;
+    margin : 5px;
+    padding : 5px;
+}
+#scorelog{
+    flex-direction : column;
+}
+#popup{
+    flex-direction : column;
+    text-align : center;
+    border: 3px;
+    background-image: url("../res/board-back1.png")
+}
+#popup-icon {
+    width: 50px;
+    height: 50px;
+}
+#numinrow{
+    width : 30px;
+    height :30px;
+    margin : 5px;
+    background-color : burlywood;
+}
+#title{
+    display: flex;
+    flex-direction : row;
+    text-align : center;
+    justify-content : center;
+}
+#numinrow {
+    text-align: right;
+    width: 2rem;
+    font-family: inherit;
+    font-size: 100%;
+    font-weight: bold;
+    /*border: 0;*/
+    margin: 0 10px 0 0;
+}
+#st{
+    display: flex;
+    flex-direction : row;
+    align-items : center;
+    justify-content : space-evenly;
+    padding : 5px;
+}
+#reset{
+    height : 37px;
+}
+#select{
+    background-color : burlywood;
+    font-size: 100%;
+}
+#stext{
+    margin : 0px 5px 0px 0px;
+}
+#tselect{
+    background-color : burlywood;
+    font-size: 100%;
+}

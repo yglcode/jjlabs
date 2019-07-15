@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <link rel='stylesheet' href='dialog-polyfill-dist/dialog-polyfill.css'></link>
+        <link rel='stylesheet' href='styles/styles.css'></link>
+    </head>
+    <body>
+        <h1 id="title">
+            <input id="numinrow" type="text" value="5"></input>
+            <span id="titlet">in a row board game</span>
+        </h1>
+        <div id="interface">
+            <div id="st">
+                <span id="stext">Play With:</span>
+                <select id="select">
+                    <option selected>Human</option>
+                    <option>Computer</option>
+                </select>
+                <select id="tselect" hidden>
+                    <option selected>Human Goes First</option>
+                    <option>Computer Goes First</option>
+                </select>
+            </div>
+            <div id="turns">
+                <span>Next turn:</span>
+                <div>
+                    <input type="radio" id="white" name="winner" value="white" checked>
+                    <label for="white">
+                        <img src='res/white.jpeg' width='20px' height='20px'>
+                    </label>
+                </div>
+                <div>
+                    <input type="radio" id="black" name="winner" value="black">
+                    <label for="black">
+                        <img src='res/black.png' width='20px' height='20px'>
+                    </label>
+                </div>
+            </div>
+            <button id="reset">Reset</button>
+        </div>
+        <div id="board">
+            <table id="gboard"></table>
+            <div id="winlog">
+                <p>WIN LOG</p>
+                <div id="scorelog"></div>
+            </div>
+        </div>
+        <dialog id="popup">
+            <div>
+                <h3 id="popuptext">WHITE WINS</h3>
+                <img id='popup-icon' src='res/explosion.png'>
+            </div>
+            <button id="resets">Reset</button>
+        </dialog>
+        <script src='dialog-polyfill-dist/dialog-polyfill.js'></script>
+        <script src="scripts/board.js"></script>
+    </body>
+</html>
